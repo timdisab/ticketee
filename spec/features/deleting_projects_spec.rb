@@ -6,7 +6,7 @@ RSpec.feature "Users can delete projects" do
 
     visit "/"
     click_link "Sublime Text 3"
-    click_link "Edit Project"
+    click_link "Delete Project"
 
     expect(page).to have_content "Project has been deleted."
     expect(page.current_url).to eq projects_url
