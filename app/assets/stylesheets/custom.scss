@@ -14,9 +14,7 @@ header {
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  max-width: 55%;
-}
+
 
 body {
   padding-top: 70px;
@@ -25,11 +23,6 @@ body {
 ul.actions {
   @extend .list-unstyled;
   @extend .list-inline;
-  position: absolute;
-  bottom: -2px;
-  right: 2px;
-  max-width: 45%;
-  text-align: right;
 }
 
 a.new, a.edit, a.delete {
