@@ -1,38 +1,55 @@
 require "rails_helper"
 
+describe ProjectPolicy do
 
+context permissions do
+  subject { ProjectPolicy.new(user, project) }
 
-permissions :show? do
   let(:user) { FactoryBot.create :user }
   let(:project) { FactoryBot.create :project }
 
-  it "blocks anonymous users" do
-    expect(subject).not_to permit(nil, project)
-  end
+  context "for anonymous users" do
+        let(:user) { nil }
 
-  it "allows viewers of the project" do
-    assign_role!(user, :viewer, project)
-    expect(subject).to permit(user, project)
-  end
+        it { should_not permit_action :show }
+        it { should_not permit_action :update }
+      end
 
-  it "allows editors of the project" do
-    assign_role!(user, :manager, project)
-    expect(subject).to permit(user, project)
-  end
+      context "for viewers of the project" do
+        before { assign_role!(user, :viewer, project) }
 
-  it "allows managers of the project" do
-    assign_role!(user, :manager, project)
-    expect(subject).to permit(user, project)
-  end
+        it { should permit_action :show }
+        it { should_not permit_action :update }
+      end
 
-  it "allows administrators" do
-    admin = FactoryBot.create :user, :admin
-    expect(subject).to permit(admin, project)
-  end
+      context "for editors of the project" do
+        before { assign_role!(user, :editor, project) }
 
-  it "doesn't allow users assigned to other projects" do
-    other_project = FactoryBot.create :project
-    assign_role!(user, :manager, other_project)
-    expect(subject).not_to permit(user, project)
+        it { should permit_action :show }
+        it { should_not permit_action :update }
+      end
+
+      context "for managers of the project" do
+        before { assign_role!(user, :manager, project) }
+
+        it { should permit_action :show }
+        it { should permit_action :update }
+      end
+
+      context "for managers of other projects" do
+        before do
+          assign_role!(user, :manager, FactoryBot.create(:project))
+        end
+
+        it { should_not permit_action :show }
+        it { should_not permit_action :update }
+      end
+
+      context "for administrators" do
+        let(:user) { FactoryBot.create :user, :admin }
+
+        it { should permit_action :show }
+        it { should permit_action :update }
+      end
+    end
   end
-end
