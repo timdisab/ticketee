@@ -15,6 +15,7 @@ RSpec.feature "Users can view tickets" do
     FactoryBot.create(:ticket, project: ie, author: author,
       name: "Standards compliance", description: "Isn't a joke.")
 
+    login_as(author)
     visit "/"
   end
 
