@@ -13,10 +13,12 @@
         </li>
       <% end %>
       <li>
+      <% if policy(@ticket).destroy? %>
         <%= link_to "Delete Ticket", [@project, @ticket], method: :delete,
           data: { confirm: "Are you sure you want to delete this ticket?"},
           class: "delete" %>
       </li>
+      <% end %>
     </ul>
   </header>
 
